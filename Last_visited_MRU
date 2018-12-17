@@ -1,21 +1,22 @@
 #this only fetches the data needed, still need to figure out how to parse and make inteligible
+#by removing the hex in output. 
 import winreg 
+import datetime
+import os
+
 #queries the appended registry key "Last Visited Pid"
-MRU_regkey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, 'Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ComDlg32\\LastVisitedPidlMRU')
+MRU_regkey = winreg.OpenKey(winreg.HKEY_CURRENT_USER, 
+'Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ComDlg32\\LastVisitedPidlMRU')
 
 #for loop to see the shit in the registry key
-print ("Heres a list of whats in that key:")
+print ("Heres a list of the most recently activity:")
 try:
     i = 0
     while 1:
         name, value, type = winreg.EnumValue(MRU_regkey, i)
-        print (repr(name)),
+        value, type = winreg.QueryValueEx(MRU_regkey, name)
+        print (repr(value)),
         i += 1
+        print ("")
 except WindowsError:
     print
-
-#put it together under object "value"
-value, type = winreg.QueryValueEx(MRU_regkey, "MRUListEx")
-
-#print representation
-print ("here's what we found:", repr(value))
